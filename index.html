@@ -3,232 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intraday Reforecast · Everise WFM</title>
+  <title>Intraday Reforecast Calculator — Abdul Basit Everise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="app">
+<div class="page">
 
-  <!-- ════════════════════════════════════════════════════════
-       HEADER
-       ════════════════════════════════════════════════════════ -->
-  <div class="header">
+  <!-- ── TOP BAR ─────────────────────────────────────────── -->
+  <div class="top-bar">
+    <div class="top-bar-brand">
+      <div class="top-bar-logo">⟁</div>
+      <div class="top-bar-name">WFM Tools · Everise</div>
+    </div>
+    <div class="top-bar-tag">Abdul Basit · WFM Architect</div>
+  </div>
+
+  <!-- ── HEADER ─────────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="page-header-eyebrow">Real-Time Workforce Intelligence</div>
+    <h1 class="page-header-title">Intraday <em>Reforecast</em><br>Calculator</h1>
+    <p class="page-header-sub">
+      Enter your shift data to get a revised volume forecast, FTE impact estimate,
+      and operational status — then send a ready-to-go summary to your team.
+    </p>
+    <div class="page-header-byline">
+      <div class="byline-avatar">AB</div>
+      <div class="byline-text">
+        <div class="byline-name">Abdul Basit Everise</div>
+        <div class="byline-role">WFM Architect</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── GLOBAL SETTINGS ────────────────────────────────── -->
+  <div class="section" style="animation-delay:0.05s">
+    <div class="section-title">Shift Settings</div>
+    <div class="card">
+      <div class="input-grid">
+        <div class="field">
+          <label class="field-label" for="shiftStart">Shift Start</label>
+          <input class="input" type="time" id="shiftStart" value="09:00">
+        </div>
+        <div class="field">
+          <label class="field-label" for="shiftEnd">Shift End</label>
+          <input class="input" type="time" id="shiftEnd" value="23:00">
+        </div>
+        <div class="field">
+          <label class="field-label" for="reforecastAt">Reforecast At</label>
+          <input class="input" type="time" id="reforecastAt" value="13:00">
+        </div>
+        <div class="field">
+          <label class="field-label" for="paidHours">Paid Hrs / Agent</label>
+          <input class="input" type="number" id="paidHours" value="7.5" step="0.5" min="1" max="12">
+        </div>
+        <div class="field">
+          <label class="field-label" for="shrinkage">Shrinkage %</label>
+          <input class="input" type="number" id="shrinkage" value="30" step="1" min="0" max="60">
+        </div>
+        <div class="field">
+          <label class="field-label" for="occupancy">Occupancy Target %</label>
+          <input class="input" type="number" id="occupancy" value="85" step="1" min="50" max="100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUEUE INPUTS ────────────────────────────────────── -->
+  <div class="section" style="animation-delay:0.1s">
+    <div class="section-title">Queue Data</div>
+    <div class="queue-list" id="queueList"></div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="btn btn-dashed" id="addQueueBtn" style="margin-top:0;">＋ Add Queue</button>
+    </div>
+  </div>
+
+  <!-- ── ACTION BUTTONS ──────────────────────────────────── -->
+  <div class="btn-row" style="margin-bottom:36px;">
+    <button class="btn btn-primary" id="calcBtn">⚡ Calculate Reforecast</button>
+    <button class="btn btn-example" id="exampleBtn">✦ Try Example Data</button>
+    <button class="btn btn-ghost" id="resetBtn">↺ Reset</button>
+  </div>
+
+  <!-- ── RESULTS ─────────────────────────────────────────── -->
+  <div id="resultsSection" style="display:none;" class="results-section">
+
+    <div id="statusBanner"></div>
+
+    <div class="section-title">Summary</div>
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <div class="section" style="margin-top:8px;">
+      <div class="section-title">Queue Breakdown</div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="results-table" id="resultsTable">
+            <thead>
+              <tr>
+                <th>Queue</th>
+                <th>Fcst-to-Now</th>
+                <th>Actual Now</th>
+                <th>Vol Dev</th>
+                <th>AHT Dev</th>
+                <th>Δ Work (hrs)</th>
+                <th>FTE Impact</th>
+                <th>Driver</th>
+                <th>Status</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="detailSection">
+      <div class="section-title">Detailed Breakdown</div>
+      <div id="detailAccordions"></div>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- ── HOW IT WORKS ────────────────────────────────────── -->
+  <div class="section" style="animation-delay:0.15s;margin-top:12px;">
+    <div class="section-title">How This Tool Works</div>
+    <div class="how-it-works">
+      <h2 class="how-title">Built for WFM analysts, <em>not</em> data scientists.</h2>
+      <ul class="how-list">
+        <li>Early in the shift the tool trusts the original forecast more than the live run rate — because there isn't enough data yet to rely on it.</li>
+        <li>As the shift progresses it gradually shifts weight toward real data, so your revised forecast becomes more and more reliable.</li>
+        <li>Variance is evaluated using a simple ±5% tolerance rule. Anything over 10% is flagged as Risk.</li>
+        <li>The tool separates whether changes are caused by volume (more or fewer contacts) or AHT (calls taking longer or shorter), so you know where to act.</li>
+        <li>FTE impact is calculated using your shrinkage and occupancy targets — the number you see is what you'd need to add or remove from the floor right now.</li>
+      </ul>
+      <div class="how-phases">
+        <div class="how-phase">
+          <div class="how-phase-label">Early shift · &lt;50%</div>
+          <div class="how-phase-val">70% Forecast / 30% Run Rate</div>
+          <div class="how-phase-desc">Low confidence. Forecast leads.</div>
+        </div>
+        <div class="how-phase">
+          <div class="how-phase-label">Mid shift · 50–70%</div>
+          <div class="how-phase-val">50% Forecast / 50% Run Rate</div>
+          <div class="how-phase-desc">Medium confidence. Balanced blend.</div>
+        </div>
+        <div class="how-phase">
+          <div class="how-phase-label">Late shift · &gt;70%</div>
+          <div class="how-phase-val">30% Forecast / 70% Run Rate</div>
+          <div class="how-phase-desc">High confidence. Data leads.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ───────────────────────────────────────────── -->
+  <footer class="page-footer">
     <div>
-      <div class="header-eyebrow">Everise WFM · Intraday Intelligence</div>
-      <div class="header-title">Intraday <span>Reforecast</span> Calculator</div>
-      <div class="header-sub">Workload-driven capacity impact · Intelligent deviation analysis</div>
-      <div class="header-badges">
-        <div class="badge badge-df">🦋 Dragonfly Health</div>
-        <div class="badge badge-ep">💊 Enclara Pharmacia</div>
-      </div>
+      <div class="footer-note">Intraday Reforecast Calculator · WFM Tools by Everise</div>
+      <div class="footer-note" style="margin-top:4px;">All calculations run in-browser · No data is sent anywhere</div>
     </div>
-    <div class="header-right">
-      <span class="live-dot"></span>
-      <div class="live-clock" id="liveClock">--:--:--</div>
-      <div class="creator-tag">
-        <strong>Abdul Basit</strong><br>
-        WFM Architect · Everise
-      </div>
-    </div>
-  </div>
+    <div class="footer-sig">Abdul Basit Everise — WFM Architect</div>
+  </footer>
 
-  <!-- ════════════════════════════════════════════════════════
-       GLOBAL SETTINGS
-       ════════════════════════════════════════════════════════ -->
-  <div class="card" style="animation-delay:0.08s">
-    <div class="section-label"><span class="dot dot-blue"></span> Global Settings</div>
-    <div class="settings-grid">
-      <div class="field">
-        <label for="startTime">Shift Start</label>
-        <input type="time" id="startTime" value="09:00">
-      </div>
-      <div class="field">
-        <label for="endTime">Shift End</label>
-        <input type="time" id="endTime" value="23:30">
-      </div>
-      <div class="field">
-        <label for="reforecastTime">Reforecast At</label>
-        <input type="time" id="reforecastTime" value="13:00">
-      </div>
-      <div class="field">
-        <label for="paidHours">Paid Hrs / Agent</label>
-        <input type="number" id="paidHours" value="7.5" step="0.5" min="1" max="12">
-      </div>
-      <div class="field">
-        <label for="shrinkagePct">Shrinkage %</label>
-        <input type="number" id="shrinkagePct" value="8" step="1" min="0" max="50">
-      </div>
-      <div class="field">
-        <label for="occupancyTarget">Occupancy Target %</label>
-        <input type="number" id="occupancyTarget" value="85" step="1" min="50" max="100">
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       QUEUE INPUTS
-       ════════════════════════════════════════════════════════ -->
-  <div class="section-label" style="margin-top:8px;margin-bottom:10px;">
-    <span class="dot dot-green"></span> Queue Inputs
-  </div>
-  <div id="queuesContainer"></div>
-  <button class="add-queue-btn" id="addQueueBtn">＋ Add Queue</button>
-
-  <div class="divider"></div>
-
-  <!-- ════════════════════════════════════════════════════════
-       OUTPUT TABLE
-       ════════════════════════════════════════════════════════ -->
-  <div class="card" style="animation-delay:0.15s">
-    <div class="section-label"><span class="dot dot-amber"></span> Output Summary — All Queues</div>
-    <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">
-      ℹ Volume-weighted + AHT-adjusted + Confidence-scored FTE impact · Occupancy-adjusted
-    </div>
-    <div class="table-wrap">
-      <table class="out-table">
-        <thead>
-          <tr>
-            <th>Queue</th>
-            <th>Fcst-to-Now</th>
-            <th>Actual Now</th>
-            <th>Vol Dev %</th>
-            <th>AHT Dev %</th>
-            <th>Δ Workload (hrs)</th>
-            <th>FTE Impact</th>
-            <th>Driver</th>
-            <th>Risk</th>
-            <th>Confidence</th>
-          </tr>
-        </thead>
-        <tbody id="outputTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       SUMMARY TILES
-       ════════════════════════════════════════════════════════ -->
-  <div class="summary-tiles" id="summaryTiles"></div>
-
-  <!-- ════════════════════════════════════════════════════════
-       DETAILED BREAKDOWN
-       ════════════════════════════════════════════════════════ -->
-  <div class="card" style="animation-delay:0.2s">
-    <div class="section-label"><span class="dot dot-purple"></span> Detailed Breakdown</div>
-    <div class="tab-bar" id="tabBar"></div>
-    <div id="detailPanel"></div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       OPERATIONAL SUMMARY + EMAIL AUTOMATION
-       ════════════════════════════════════════════════════════ -->
-  <div class="email-section" style="animation-delay:0.25s">
-
-    <!-- Header bar with send buttons -->
-    <div class="email-section-header">
-      <div class="email-section-title">
-        <div class="email-icon email-icon-blue">📋</div>
-        Operational Summary &amp; Email Dispatch
-      </div>
-      <div class="email-send-btns">
-        <button class="send-btn send-btn-outlook" id="btnOutlook">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,14 22,4"/></svg>
-          Outlook
-        </button>
-        <button class="send-btn send-btn-gmail" id="btnGmail">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,14 22,4"/></svg>
-          Gmail
-        </button>
-        <button class="send-btn send-btn-copy" id="btnCopy">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Copy Text
-        </button>
-        <button class="send-btn send-btn-n8n" id="btnN8nEmail">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          n8n Workflow
-        </button>
-      </div>
-    </div>
-
-    <!-- Email recipient config -->
-    <div class="email-config">
-      <div class="field">
-        <label for="emailTo">To (recipient email)</label>
-        <input type="email" id="emailTo" placeholder="manager@company.com">
-      </div>
-      <div class="field">
-        <label for="emailCc">CC</label>
-        <input type="email" id="emailCc" placeholder="ops-team@company.com">
-      </div>
-      <div class="field" style="flex:2;">
-        <label for="emailSubject">Subject Line</label>
-        <input type="text" id="emailSubject" value="Intraday Reforecast — Operational Summary">
-      </div>
-    </div>
-
-    <!-- Live summary preview -->
-    <div class="ops-summary-preview">
-      <div class="ops-summary-toolbar">
-        <div class="ops-summary-toolbar-title">📄 Live Summary Preview — auto-updates as you edit</div>
-      </div>
-      <pre class="ops-summary-body" id="opsSummaryBody"></pre>
-    </div>
-
-    <!-- n8n Webhook panel -->
-    <div class="webhook-panel">
-      <div class="webhook-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        n8n Webhook — Trigger Automation Workflow
-      </div>
-      <div style="font-size:11px;color:#a05a2c;margin-bottom:10px;line-height:1.6;">
-        Paste your n8n webhook URL below. Clicking <strong>Trigger Workflow</strong> will POST a full JSON payload
-        (queue data + FTE impacts + ops summary text) to your n8n workflow — ready for Slack alerts,
-        email routing, Google Sheets logging, or any automation.
-      </div>
-      <div class="webhook-row">
-        <input
-          type="text"
-          class="webhook-input"
-          id="webhookUrl"
-          placeholder="https://your-n8n-instance.com/webhook/your-webhook-id"
-        >
-        <button class="webhook-trigger-btn" id="webhookTriggerBtn">
-          <span>▶</span> Trigger Workflow
-        </button>
-        <div class="webhook-status" id="webhookStatus"></div>
-      </div>
-      <div style="font-size:10px;color:#c07040;margin-top:10px;line-height:1.7;">
-        <strong>Payload includes:</strong> timestamp · global settings · per-queue FTE/workload/risk/confidence ·
-        revised full-day volume · operational summary text ·
-        recommended actions — ready to map to n8n nodes.
-      </div>
-    </div>
-
-  </div><!-- /.email-section -->
-
-  <!-- ════════════════════════════════════════════════════════
-       FOOTER
-       ════════════════════════════════════════════════════════ -->
-  <div class="footer">
-    <strong>Intelligent Calculation Methodology:</strong>
-    Deviation = Forecast-to-Now volume vs actual volume to date (from Verint).
-    Net Δ Workload = (ΔVol × Forecast AHT) + (Actual Vol × ΔAHT).
-    FTE impact uses shrinkage-adjusted productive hours, occupancy-adjusted via Erlang proxy.
-    Projection blends run-rate vs plan using a sigmoid confidence score on elapsed shift fraction.
-    Risk: Low &lt;0.8 hrs · Medium 0.8–2.0 hrs · High &gt;2.0 hrs.
-    <div class="branding">
-      <div>
-        <div class="branding-name">🏗️ Built by Abdul Basit</div>
-        <div class="branding-sub">Everise WFM · Workforce Management Solutions</div>
-      </div>
-      <div class="branding-badges">
-        <div class="badge badge-df">DRAGONFLY HEALTH</div>
-        <div class="badge badge-ep">ENCLARA PHARMACIA</div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /.app -->
+</div><!-- /page -->
 <script src="script.js"></script>
 </body>
 </html>
