@@ -1105,3 +1105,54 @@ body::after {
 }
 
 .card { animation: glowPulse 6s ease infinite; }
+.card { animation: glowPulse 6s ease infinite; }
+
+/* ===== Workforce Suite Navbar ===== */
+
+.suite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background: #0b1220;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.suite-logo {
+  font-weight: 600;
+  font-size: 15px;
+  color: #e6edf3;
+}
+
+.suite-logo span {
+  display: block;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-link {
+  font-size: 13px;
+  color: #9fb3c8;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(0,150,255,0.12);
+  color: #ffffff;
+}
+
+.nav-link--active {
+  border: 1px solid #2ea8ff;
+  color: #ffffff;
+}
