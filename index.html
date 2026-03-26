@@ -8,6 +8,105 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "WFM Intelligence Engine",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "url": "https://abdulbasiteverise.github.io/wfm-intelligence-engine/",
+        "description": "A workforce management tool that calculates call center staffing, projected service level, capacity risk, and intraday forecast updates using forecast volume, AHT, shrinkage, occupancy, Erlang-C, and simulation outputs.",
+        "author": {
+          "@type": "Person",
+          "name": "Abdul Basit"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do you calculate required staffing in a call center?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Required staffing is calculated using forecast volume, average handle time, shrinkage, and occupancy targets."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a good occupancy rate in WFM?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Many operations target about 80% to 90% occupancy, based on service level goals and burnout risk."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does shrinkage impact staffing?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Higher shrinkage reduces productive time and increases the number of agents required."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can this tool support intraday reforecasting?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The engine combines forecast and run-rate signals to estimate revised full-day volume during the shift."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this tool work for multi-queue operations?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The workflow supports voice, back-office CoPs, and multi-queue planning use cases."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is AHT important for staffing?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Average handle time directly changes workload hours, so longer AHT increases required staffing."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "HowTo",
+        "name": "How WFM Intelligence Engine works",
+        "description": "A short method for turning volume inputs into staffing and risk outputs.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "Set planning inputs",
+            "text": "Enter shift times, forecast volume, AHT, shrinkage, service level target, and interval settings."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Run the staffing analysis",
+            "text": "Use the Run Analysis action to calculate required agents, service level projection, and capacity gap."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Review risk and action outputs",
+            "text": "Read operational risk indicators and apply recommended staffing actions for intraday control."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Simulate uncertainty",
+            "text": "Run Monte Carlo simulation to evaluate the range of likely outcomes before making decisions."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -205,6 +304,87 @@
           </div>
         </div>
       </div>
+
+
+      <section id="llm-summary" class="geo-content-block">
+        <h2>WFM Intelligence Engine – What This Tool Does</h2>
+        <ul>
+          <li>Calculates required headcount using forecast volume, AHT, shrinkage, and occupancy assumptions.</li>
+          <li>Helps workforce management teams optimize staffing decisions in real time.</li>
+          <li>Flags understaffing and overstaffing risk before service levels are affected.</li>
+          <li>Supports call center capacity planning and intraday control decisions.</li>
+          <li>Works across voice, back-office (CoPs), and multi-queue operating models.</li>
+          <li>Converts operational inputs into clear staffing, workload, and risk outputs.</li>
+        </ul>
+      </section>
+
+      <section id="wfm-definitions" class="geo-content-block">
+        <h2>Key Workforce Management Concepts Explained</h2>
+        <dl>
+          <div><dt>Forecast</dt><dd>Expected contact volume over a defined time horizon.</dd></div>
+          <div><dt>AHT (Average Handle Time)</dt><dd>Average total time spent handling one interaction.</dd></div>
+          <div><dt>Shrinkage</dt><dd>Percentage of paid time unavailable for customer-facing work.</dd></div>
+          <div><dt>Occupancy</dt><dd>Percentage of logged-in time agents are busy handling work.</dd></div>
+          <div><dt>Capacity</dt><dd>Total amount of workload available agents can absorb.</dd></div>
+        </dl>
+      </section>
+
+      <section id="wfm-formulas" class="geo-content-block">
+        <h2>Core WFM Formulas Used</h2>
+        <p class="formula-line"><strong>Required FTE</strong> = (Forecast Volume × AHT) / (Available Time × Occupancy)</p>
+        <p class="formula-line"><strong>Available Time</strong> = Paid Hours × (1 - Shrinkage)</p>
+        <p class="formula-line"><strong>Workload Hours</strong> = (Forecast Volume × AHT) / 3600</p>
+        <p class="formula-line"><strong>Capacity Utilization</strong> = Required Hours / Available Hours</p>
+      </section>
+
+      <section id="wfm-use-cases" class="geo-content-block">
+        <h2>Who Should Use This Tool?</h2>
+        <ul>
+          <li><strong>Workforce Management (WFM) Analysts:</strong> Plan staffing using forecast, AHT, and shrinkage assumptions.</li>
+          <li><strong>Real-Time Analysts (RTA):</strong> Detect intraday variance and react to service level risk quickly.</li>
+          <li><strong>Capacity Planning Teams:</strong> Quantify workload-to-capacity gaps before schedules are finalized.</li>
+          <li><strong>Call Center Operations Managers:</strong> Make informed staffing tradeoffs between cost and performance.</li>
+        </ul>
+      </section>
+
+      <section id="wfm-faq" class="geo-content-block">
+        <h2>Frequently Asked Questions</h2>
+        <details open>
+          <summary>How do you calculate required staffing in a call center?</summary>
+          <p>Required staffing is calculated using forecast volume, AHT, shrinkage, and occupancy.</p>
+        </details>
+        <details>
+          <summary>What is a good occupancy rate in WFM?</summary>
+          <p>Typical ranges are 80% to 90%, based on service level goals and burnout risk.</p>
+        </details>
+        <details>
+          <summary>How does shrinkage impact staffing?</summary>
+          <p>Higher shrinkage reduces available time and increases required headcount.</p>
+        </details>
+        <details>
+          <summary>Why is AHT important for staffing models?</summary>
+          <p>Higher AHT increases workload hours, which directly raises staffing requirements.</p>
+        </details>
+        <details>
+          <summary>Can this tool support intraday reforecasting?</summary>
+          <p>Yes. It combines forecast and run-rate signals to estimate revised full-day demand.</p>
+        </details>
+        <details>
+          <summary>Does this tool support back-office and multi-queue teams?</summary>
+          <p>Yes. It can be used for voice queues, CoPs, and multi-queue environments.</p>
+        </details>
+      </section>
+
+      <section id="wfm-links" class="geo-content-block">
+        <h2>Explore More Workforce Management Tools</h2>
+        <ul>
+          <li><a href="https://abdulbasiteverise.github.io/wfm-forecast-validator/">Forecast Validator</a> — Validate your forecast accuracy before publishing staffing plans.</li>
+          <li><a href="https://abdulbasiteverise.github.io/wfm-intraday-variance-analysis/">Intraday Variance Analysis</a> — Track real-time performance gaps between plan and actuals.</li>
+          <li><a href="https://abdulbasiteverise.github.io/wfm-multi-queue-allocation-simulator/">Multi-Queue Allocation Simulator</a> — Optimize agent distribution across concurrent queues.</li>
+          <li><a href="https://abdulbasiteverise.github.io/wfm-bwie-simulator/">BWIE Simulator</a> — Simulate backlog and workload impact under changing arrival patterns.</li>
+          <li><a href="https://abdulbasiteverise.github.io/wfm-forecast-smoothing/">Forecast Smoothing</a> — Improve forecast stability for better scheduling precision.</li>
+        </ul>
+      </section>
 
       <!-- AI EXPLAINER PANEL -->
       <div class="ai-panel" id="aiPanel">
@@ -494,6 +674,8 @@
     <span>Erlang-C · Monte Carlo · Intraday Forecasting</span>
     <span class="footer-sep">|</span>
     <span id="footerTime"></span>
+    <span class="footer-sep">|</span>
+    <span class="footer-author">Built by Abdul Basit – Workforce Management Leader specializing in forecasting, real-time analytics, and capacity planning.</span>
   </footer>
 
   <script src="script.js"></script>
